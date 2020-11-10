@@ -1,4 +1,4 @@
-const Employee = require('../models/Employee')
+const Employee = require('../models/Employee');
 
 //show the list 
 const index=(req, res, next) =>{
@@ -30,7 +30,7 @@ const show = (req, res, next) => {
     })
 }
 
-//store new 
+//add
 const store = (req, res, next) => {
     let employee = new Employee({
         name: req.body.name,
@@ -39,6 +39,17 @@ const store = (req, res, next) => {
         phone: req.body.phone,
         age: req.body.age
     })
+    
+    if(req.files)
+    {
+        let path = ''
+        req.files.forEach(function(files, index, arr){
+            path = path + files.path + ','
+        })
+        path = path.substring(0, path.lastIndexOf(","))
+        employee.avatar = path
+    }
+    
     employee.save()
     .then(response => {
         res.json({
